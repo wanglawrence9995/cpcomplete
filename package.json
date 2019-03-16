@@ -3,7 +3,7 @@
 	"displayName": "cpcomplete",
 	"publisher": "wanglawrence",
 	"description": "regarding cp for better operation",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -280,6 +280,11 @@
 					"type": "number",
 					"default": 0,
 					"description": "The maximum execution time, in seconds. If set to zero, no time limit is imposed."
+				},
+				"io-run.pluginListenPort": {
+					"type": "number",
+					"default": 8080,
+					"description": "Can change this to any port so vscode used by diffferent user can have different listening port."
 				},
 				"io-run.inputExtension": {
 					"type": "string",

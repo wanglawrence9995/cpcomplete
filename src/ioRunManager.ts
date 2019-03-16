@@ -35,7 +35,8 @@ export class IORunManager {
         this.config = config;
         // Enable server
         this.app = express();
-        this.port = 8080;
+        //this.port = 8080;
+        this.port = this.config.pluginListenPort;
         //const bodyparser = bodyParser();
         this.app.use(bodyParser.json());
         this.app.post('/', (req, res) => {
