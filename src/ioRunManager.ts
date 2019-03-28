@@ -100,7 +100,7 @@ export class IORunManager {
     public stop(): void {
       //  analytics.send("Action", "stop");
 
-        if (this.process != null) {
+        if (this.process !== null) {
             this.killRequested = true;
             let kill = require('tree-kill');
             kill(this.process.pid);
@@ -111,7 +111,7 @@ export class IORunManager {
        // analytics.send("Action", "addInputOutput");
 
         let codeFile = this.getCodeFile();
-        if (codeFile == null) return;
+        if (codeFile === null) {return;}
 
         let codeFileNoExt = tools.getFileNoExtension(codeFile)
         let inputExt = this.config.inputExtension.toLowerCase();
@@ -140,6 +140,85 @@ export class IORunManager {
             }
         }
     }
+
+    public extractSnippet(): void {
+        let activeEditor = vscode.window.activeTextEditor;
+        if (!activeEditor) return;
+
+        let codeFile = this.getCodeFile();
+        if (codeFile == null) return;
+
+        let executor = this.getExecutor(codeFile);
+        if (executor.clearPreviousOutput) {
+            this.output.clear();
+        }
+        this.output.show(true);
+        // show message
+        // create a file and open it like output. 
+    }
+
+    public mergeSnippet(): void {
+        let activeEditor = vscode.window.activeTextEditor;
+        if (!activeEditor) return;
+
+        let codeFile = this.getCodeFile();
+        if (codeFile == null) return;
+
+        let executor = this.getExecutor(codeFile);
+        if (executor.clearPreviousOutput) {
+            this.output.clear();
+        }
+        this.output.show(true);
+        // show message
+        // create a file and open it like output. 
+    }
+    public showSnippet(): void {
+        let activeEditor = vscode.window.activeTextEditor;
+        if (!activeEditor) return;
+
+        let codeFile = this.getCodeFile();
+        if (codeFile == null) return;
+
+        let executor = this.getExecutor(codeFile);
+        if (executor.clearPreviousOutput) {
+            this.output.clear();
+        }
+        this.output.show(true);
+        // show message
+        // create a file and open it like output. 
+    }
+
+    public compileOnly(): void {
+        //  analytics.send("Action", "run");
+  
+          if (this.process != null) {
+              vscode.window.showInformationMessage('[' + this.runningCodeFile + '] still running!');
+              return;
+          }
+  
+          let activeEditor = vscode.window.activeTextEditor;
+          if (!activeEditor) return;
+  
+          let codeFile = this.getCodeFile();
+          if (codeFile == null) return;
+  
+          let executor = this.getExecutor(codeFile);
+          executor.runAllInput = true;
+  
+        //  analytics.send("CodeExt", executor.codeExt);
+  
+          if (executor.clearPreviousOutput) {
+              this.output.clear();
+          }
+          this.output.show(true);
+  
+          let listFileNeedSaved = this.getListFileNeedSaved(executor);
+          if (listFileNeedSaved.length > 0) {
+              this.saveFilesAndCompileOnly(executor, listFileNeedSaved);
+          } else {
+              this.compileCodeOnly(executor);
+          }
+      }
 
     public run(runAllInputs: boolean = true): void {
       //  analytics.send("Action", "run");
@@ -218,6 +297,41 @@ export class IORunManager {
                 break;
             }
         }
+    }
+
+    // create a function for compile the code only, like when we want to debug
+    private compileCodeOnly(executor: any){
+        let compileCmd = this.setCmdVar(executor, executor.compileCmd);
+        let processEnv = Object.assign({}, process.env);
+        if (executor.PATH) {
+            processEnv.PATH = executor.PATH + path.delimiter + processEnv.PATH;
+        }
+        processEnv.PATH = executor.codeDir + path.delimiter + processEnv.PATH;
+
+        this.output.append('[' + executor.codeFile + '] compiling... ');
+        this.process = require('child_process').exec(compileCmd, { cwd: executor.codeDir, env: processEnv });
+
+        let stdout = '';
+        let stderr = '';
+        this.process.stdout.on('data', (data) => {
+            stdout += data;
+        });
+        this.process.stderr.on('data', (data) => {
+            stderr += data;
+        });
+        this.process.on('close', (code) => {
+            this.process = null;
+            if (code == 0) {
+                this.output.appendLine('ok');
+               //  this.runCode(executor);   // the only difference
+            } else {
+                this.output.appendLine('error!');
+                if (stdout.length > 0) this.output.appendLine(stdout);
+                if (stderr.length > 0) this.output.appendLine(stderr);
+
+                this.jumpToErrorPosition(executor, stdout + stderr);
+            }
+        });       
     }
 
     private compileCode(executor: any) {
@@ -498,6 +612,25 @@ export class IORunManager {
 
             return saveList;
         }
+    }
+    private saveFilesAndCompileOnly(executor: any, saveList: vscode.TextDocument[]) {
+        let saveTopDoc = () => {
+            let doc = saveList[0];
+            this.output.append('[' + path.basename(doc.fileName) + '] saving... ');
+            doc.save().then(() => {
+                this.output.appendLine('ok');
+                saveList.shift();
+                if (saveList.length == 0) {
+                    this.compileCodeOnly(executor);
+                } else {
+                    saveTopDoc();
+                }
+            });
+        };
+        if (saveList.length > 0) {
+            saveTopDoc();
+        }
+
     }
 
     private saveFilesAndCompile(executor: any, saveList: vscode.TextDocument[]) {

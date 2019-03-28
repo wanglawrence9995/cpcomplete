@@ -2,8 +2,8 @@
 	"name": "cpcomplete",
 	"displayName": "cpcomplete",
 	"publisher": "wanglawrence",
-	"description": "regarding cp for better operation",
-	"version": "1.0.1",
+	"description": "Code compitition helper with a hello",
+	"version": "1.1.0",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -12,6 +12,10 @@
 	],
 	"activationEvents": [
 		"onCommand:extension.helloWorld",
+		"onCommand:io-run.extractsnippet",
+		"onCommand:io-run.mergesnippet",
+		"onCommand:io-run.showsnippet",
+		"onCommand:io-run.compileonly",
 		"onCommand:io-run.run",
 		"onCommand:io-run.run-1-input",
 		"onCommand:io-run.add-input-output"
@@ -21,7 +25,23 @@
 		"commands": [
 			{
 				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"title": "Hello CP"
+			},
+			{
+				"command": "io-run.extractsnippet",
+				"title": "IORun Extract Snippet"
+			},
+			{
+				"command": "io-run.mergesnippet",
+				"title": "IORun Merge System Snippet"
+			},
+			{
+				"command": "io-run.showsnippet",
+				"title": "IORun Search Snippet"
+			},
+			{
+				"command": "io-run.compileonly",
+				"title": "IORun Compile"
 			},
 			{
 				"command": "io-run.run",
@@ -43,12 +63,28 @@
 		],
 		"keybindings": [
 			{
+				"command": "io-run.extractsnippet",
+				"key": "ctrl+alt+k 1"
+			},
+			{
+				"command": "io-run.mergesnippet",
+				"key": "ctrl+alt+k 2"
+			},
+			{
+				"command": "io-run.showsnippet",
+				"key": "ctrl+alt+k 3"
+			},
+			{
+				"command": "io-run.compileonly",
+				"key": "ctrl+alt+k c"
+			},
+			{
 				"command": "io-run.run",
 				"key": "ctrl+enter"
 			},
 			{
 				"command": "io-run.run-1-input",
-				"key": "ctrl+1"
+				"key": "ctrl+alt+k t"
 			},
 			{
 				"command": "io-run.add-input-output",
@@ -68,12 +104,32 @@
 				},
 				{
 					"when": "!inOutput",
+					"command": "io-run.compileonly",
+					"group": "navigation"
+				},
+				{
+					"when": "!inOutput",
 					"command": "io-run.run",
 					"group": "navigation"
 				},
 				{
 					"when": "!inOutput",
 					"command": "io-run.run-1-input",
+					"group": "navigation"
+				},
+				{
+					"when": "!inOutput",
+					"command": "io-run.extractsnippet",
+					"group": "navigation"
+				},
+				{
+					"when": "!inOutput",
+					"command": "io-run.mergesnippet",
+					"group": "navigation"
+				},
+				{
+					"when": "!inOutput",
+					"command": "io-run.showsnippet",
 					"group": "navigation"
 				},
 				{
@@ -94,6 +150,7 @@
 			"type": "object",
 			"title": "IO Run configuration",
 			"properties": {
+				
 				"io-run.executorMap.common": {
 					"type": "object",
 					"description": "Set the common executor of each language.",
@@ -105,7 +162,7 @@
 							"errorTracer": "gdb"
 						},
 						".cpp": {
-							"compileCmd": "g++ -g -O2 -std=gnu++11 -Wfatal-errors ${codeFile} -o ${codeFileNoExt}",
+							"compileCmd": "g++ -g -O2 -std=gnu++17 -Wfatal-errors ${codeFile} -o ${codeFileNoExt}",
 							"runCmd": "${dirCodeFileNoExt} <${inputFile} >${outputFile}",
 							"cleanupCmd": "rm ${codeFileNoExt}",
 							"errorTracer": "gdb"
@@ -229,7 +286,7 @@
 						},
 						".cpp": {
 							"PATH": "C:\\MinGW\\bin;C:\\msys64\\mingw64\\bin;C:\\Program Files (x86)\\CodeBlocks\\MinGW\\bin;C:\\Program Files\\CodeBlocks\\MinGW\\bin;C:\\cygwin\\bin;C:\\TDM-GCC-32\\bin;C:\\TDM-GCC-64\\bin",
-							"compileCmd": "g++ -g -static -std=gnu++11 -Wfatal-errors ${codeFile} -o ${codeFileNoExt.exe}",
+							"compileCmd": "g++ -g -static -std=gnu++17 -Wfatal-errors ${codeFile} -o ${codeFileNoExt.exe}",
 							"runCmd": "${dirCodeFileNoExt.exe} <${inputFile} >${outputFile}",
 							"cleanupCmd": "del ${codeFileNoExt.exe}"
 						},
@@ -285,7 +342,7 @@
 					"type": "number",
 					"default": 8080,
 					"description": "Can change this to any port so vscode used by diffferent user can have different listening port."
-				},
+				},				
 				"io-run.inputExtension": {
 					"type": "string",
 					"default": ".inp",
@@ -313,7 +370,7 @@
 				},
 				"io-run.cleanupAfterRun": {
 					"type": "boolean",
-					"default": true,
+					"default": false,
 					"description": "Whether to cleanup file after running."
 				},
 				"io-run.deleteOutputFiles": {
@@ -328,7 +385,7 @@
 				},
 				"io-run.enableAnalytic": {
 					"type": "boolean",
-					"default": true,
+					"default": false,
 					"description": "Whether to send analytics data."
 				},
 				"io-run.showInputFileOnWrongAnswer": {
@@ -348,12 +405,12 @@
 				},
 				"io-run.diffIgnoreSpaces": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Whether to ignore spaces when diff."
 				},
 				"io-run.showErrorOutputOnFails": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Whether to show stderr when fail tests, useful to people who debug by printing values."
 				}
 			}
@@ -387,11 +444,11 @@
 	"devDependencies": {
 		"@types/express": "^4.16.1",
 		"@types/mocha": "^2.2.42",
-		"@types/node": "^10.12.21",
+		"@types/node": "^10.14.4",
 		"express": "^4.16.4",
-		"node": "^10.15.1",
-		"tslint": "^5.12.1",
-		"typescript": "^3.3.1",
-		"vscode": "^1.1.28"
+		"node": "^10.15.3",
+		"tslint": "^5.14.0",
+		"typescript": "^3.3.4000",
+		"vscode": "^1.1.33"
 	}
 }

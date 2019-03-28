@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World!');
+		vscode.window.showInformationMessage('Hello CP, check io-run for further configuration!');
 	});
 
 	let ioRunManager = new IORunManager(config);
@@ -27,8 +27,18 @@ export function activate(context: vscode.ExtensionContext) {
         ioRunManager.updateConfig(config);
    //     analytics.updateConfig(config);
     });
-
-
+    let extractsnippet = vscode.commands.registerCommand('io-run.extractsnippet', () => {
+        ioRunManager.extractSnippet();
+    });
+    let mergesnippet = vscode.commands.registerCommand('io-run.mergesnippet', () => {
+        ioRunManager.mergeSnippet();
+    });
+    let showsnippet = vscode.commands.registerCommand('io-run.showsnippet', () => {
+        ioRunManager.showSnippet();
+    });
+    let compileonly = vscode.commands.registerCommand('io-run.compileonly', () => {
+        ioRunManager.compileOnly();
+    });
     let run = vscode.commands.registerCommand('io-run.run', () => {
         ioRunManager.run();
     });
@@ -43,7 +53,10 @@ export function activate(context: vscode.ExtensionContext) {
     let addInputOutput = vscode.commands.registerCommand('io-run.add-input-output', () => {
         ioRunManager.addInputOutput();
     });
-
+    context.subscriptions.push(extractsnippet);
+    context.subscriptions.push(mergesnippet);
+    context.subscriptions.push(showsnippet);
+    context.subscriptions.push(compileonly);
     context.subscriptions.push(run);
     context.subscriptions.push(run1input);
     context.subscriptions.push(stop);
