@@ -18,9 +18,44 @@ export function quoteFileName(filePath: string): string {
 
 export function quoteLine(srcLine: string): string {
     if (srcLine.match(/\s/)) {
-        srcLine = '"' + srcLine.replace(/"/g, '\"') + '",\n';
+        srcLine =  srcLine.replace(/"/g, '\"') ;
     }
     return srcLine;
+}
+
+export function filewalker(dir:string, done:any): any{
+    let results = [];
+    const path = require('path');
+    const fs = require('fs');
+    fs.readdir(dir, function(err, list) {
+        if (err) return done(err);
+
+        var pending = list.length;
+
+        if (!pending) return done(null, results);
+
+        list.forEach(function(file){
+            file = path.resolve(dir, file);
+
+            fs.stat(file, function(err, stat){
+                // If directory, execute a recursive call
+                if (stat && stat.isDirectory()) {
+                    // Add directory to array [comment if you need to remove the directories from the array]
+                    results.push(file);
+
+                    filewalker(file, function(err, res){
+                        results = results.concat(res);
+                        if (!--pending) done(null, results);
+                    });
+                } else {
+                    results.push(file);
+
+                    if (!--pending) done(null, results);
+                }
+            });
+        });
+    });
+    return results;
 }
 
 export function replaceVar(originalStr: string, varName: string, value: string): string {

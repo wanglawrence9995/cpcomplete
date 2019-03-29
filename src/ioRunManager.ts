@@ -155,9 +155,63 @@ export class IORunManager {
         this.output.show(true);
         this.output.append('[' + executor.codeFile + ' on ' + os.platform() + '] extracting snippets ... \n');
         //var outstring = this.extractSnippetFromFile(codeFile);
-        this.output.append(this.extractSnippetFromFile(codeFile));
-        // show selected text
 
+        let sStart =executor.snippetStart; //executor.
+        let sEnd = executor.snippetEnd;
+        let readLineSync = require('./readLineSync');
+        let iLiner = readLineSync(codeFile);
+        let bRecordSnippet = false;
+        let sFileToWrite = '';  
+        let sPrefix = '';  
+        let sDesc = '';  //copy what ever and appending the origin of file
+
+        
+        let testsnippet = {};
+        let body = [];
+
+
+        while (true) {
+            let iline = iLiner.next();
+            if (iline.done){
+                return;
+            }
+
+            if (iline.value.startsWith(sStart)){
+                bRecordSnippet = true;
+                sPrefix = iline.value.substring(sStart.length+1);
+                sFileToWrite = executor.dirsnippet + path.sep + sPrefix + ".json";  //need combine with src dir in dir, 
+                testsnippet['prefix'] = sPrefix;
+            
+                continue;
+            }
+
+            if (iline.value.startsWith(sEnd)){
+                bRecordSnippet = false;
+                sDesc = iline.value.substring(sEnd.length+1);  //right after prefix
+                sDesc =sDesc + '|' + codeFile;
+                testsnippet['description'] = sDesc;
+                testsnippet['body']=body;
+
+                var jdata = {};
+                jdata[sPrefix] = testsnippet;
+                let data = JSON.stringify(jdata, undefined, 2);  
+                fs.writeFileSync(sFileToWrite, data);
+
+                vscode.workspace.openTextDocument(sFileToWrite).then(doc => {
+                    vscode.window.showTextDocument(doc, vscode.ViewColumn.Two);
+                });
+                body = []; //must clear the body for next block
+                testsnippet = {};
+                continue;
+            }
+
+            if (bRecordSnippet){
+                body.push(tools.quoteLine(iline.value));
+            }
+        }
+
+        // open the create json file in new windows
+  
         // create a file and open it like output. 
     }
 
@@ -173,24 +227,33 @@ export class IORunManager {
             this.output.clear();
         }
         this.output.show(true);
-        let rawdata = fs.readFileSync('/home/lwang/.config/Code/User/snippets/cpp.json');  
-        let cppsp = JSON.parse(rawdata.toString());
 
-        let templatejson = cppsp[0];
-        for (var snipskey in cppsp){
-            this.output.append(cppsp[snipskey].description + '\n');
-        } 
-
-        // create a json file to a default repository
-        // and open it.
         
 
-        //  for (var item in cppsp.fastio.body) {
-        //     this.output.append(cppsp.fastio.body[item] + '\n');
-        // }
-        
-        // show message
-        // create a file and open it like output. 
+        let rawdata = fs.readFileSync(executor.filesystemsnippet);  
+        let systemsp = JSON.parse(rawdata.toString());
+
+        let lf = fs.readdirSync(executor.dirsnippet);
+
+            // ["c://some-existent-path/file.txt","c:/some-existent-path/subfolder"]
+        lf.forEach(file => {
+            file = path.resolve(executor.dirsnippet, file);
+            let rd = fs.readFileSync(file);
+            let curJSON = JSON.parse(rd.toString());
+            let targetJSON = {};
+            for (var prop in curJSON)
+            {
+                targetJSON = curJSON[prop];
+                systemsp[targetJSON['prefix']]=targetJSON;
+            }
+            // let curPrefix= targetJSON['prefix'];
+            
+        });
+
+        let jdata = JSON.stringify(systemsp, undefined, 2);  
+        fs.writeFileSync(executor.filesystemsnippet, jdata);
+
+
     }
     public showSnippet(): void {
         let activeEditor = vscode.window.activeTextEditor;
@@ -207,8 +270,8 @@ export class IORunManager {
 
         var testsnippet = {};
         var body = [];
-        body.push('some code');
-        body.push('more code');
+        body.push("some code");
+        body.push("more code");
         testsnippet['prefix'] = 'tprefix';
         testsnippet['body'] = body;
         testsnippet['description'] = 'a nice application';
@@ -578,38 +641,9 @@ export class IORunManager {
             this.cleanup(executor);
         });
     }
+    
 
-    private extractSnippetFromFile(iFile: string /* oFileDir: string*/): string {
-        let readLineSync = require('./readLineSync');
-        let iLiner = readLineSync(iFile);
-        let sP = '';
-        let s = '';
-        let bRecordSnippet = false;
-        
-        // a json object 
-        //body : string[] = [];
-        while (true) {
-            let iline = iLiner.next();
-            if (iline.done) {
-                return sP;
-            }
 
-            if (iline.value.startsWith('//startsnippet')){
-                bRecordSnippet = true;
-                
-                continue;
-            }
-            if (iline.value.startsWith('//endsnippet')){
-                bRecordSnippet = false;
-                continue;
-            }
-            
-            if (bRecordSnippet){
-                sP = sP + tools.quoteLine(iline.value);
-            }
-
-        }
-    }
 
     private compareOA(executor: any, oFile: string, aFile: string): boolean {
         let readLineSync = require('./readLineSync')

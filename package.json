@@ -165,7 +165,11 @@
 							"compileCmd": "g++ -g -O2 -std=gnu++17 -Wfatal-errors ${codeFile} -o ${codeFileNoExt}",
 							"runCmd": "${dirCodeFileNoExt} <${inputFile} >${outputFile}",
 							"cleanupCmd": "rm ${codeFileNoExt}",
-							"errorTracer": "gdb"
+							"errorTracer": "gdb",
+							"snippetStart": "//startsnippet",
+							"snippetEnd": "//endsnippet",
+							"dirsnippet": "/home/lwang/snippet/cpp/",
+							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/cpp.json"
 						},
 						".d": {
 							"compileCmd": "dmd -g ${codeFile}",
@@ -176,20 +180,39 @@
 						".go": {
 							"compileCmd": "go build -o ${codeFileNoExt} ${codeFile}",
 							"runCmd": "${dirCodeFileNoExt} <${inputFile} >${outputFile}",
-							"cleanupCmd": "rm ${codeFileNoExt}"
+							"cleanupCmd": "rm ${codeFileNoExt}",
+							"snippetStart": "//startsnippet",
+							"snippetEnd": "//endsnippet",
+							"dirsnippet": "/home/lwang/snippet/go/",
+							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/go.json"
+
 						},
 						".hs": {
 							"compileCmd": "ghc -o ${codeFileNoExt} ${codeFile}",
 							"runCmd": "${dirCodeFileNoExt} <${inputFile} >${outputFile}",
-							"cleanupCmd": "rm ${codeFileNoExt}"
+							"cleanupCmd": "rm ${codeFileNoExt}",
+							"snippetStart": "--startsnippet",
+							"snippetEnd": "--endsnippet",
+							"dirsnippet": "/home/lwang/snippet/haskell/",
+							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/haskell.json"
+
 						},
 						".java": {
 							"compileCmd": "javac -encoding UTF-8 ${codeFile}",
 							"runCmd": "java ${codeFileNoExt} <${inputFile} >${outputFile}",
-							"cleanupCmd": "rm ${codeFileNoExt.class}"
+							"cleanupCmd": "rm ${codeFileNoExt.class}",
+							"snippetStart": "//startsnippet",
+							"snippetEnd": "//endsnippet",
+							"dirsnippet": "/home/lwang/snippet/java/",
+							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/java.json"
 						},
 						".js": {
-							"runCmd": "node ${codeFile} <${inputFile} >${outputFile}"
+							"runCmd": "node ${codeFile} <${inputFile} >${outputFile}",
+							"snippetStart": "//startsnippet",
+							"snippetEnd": "//endsnippet",
+							"dirsnippet": "/home/lwang/snippet/javascript/",
+							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/javascript.json"
+
 						},
 						".kt": {
 							"compileCmd": "kotlinc ${codeFile} -include-runtime -d ${codeFileNoExt.jar}",
@@ -214,7 +237,11 @@
 							"errorTracer": "gdb"
 						},
 						".py": {
-							"runCmd": "python ${codeFile} <${inputFile} >${outputFile}"
+							"runCmd": "python ${codeFile} <${inputFile} >${outputFile}",
+							"snippetStart": "#startsnippet",
+							"snippetEnd": "#endsnippet",
+							"dirsnippet": "/home/lwang/snippet/python/",
+							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/python.json"
 						},
 						".php": {
 							"runCmd": "php ${codeFile} <${inputFile} >${outputFile}"
