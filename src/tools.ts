@@ -11,11 +11,17 @@ export function getFileNoExtension(filePath: string): string {
 
 export function quoteFileName(filePath: string): string {
     if (filePath.match(/\s/)) {
-        filePath = '"' + filePath.replace(/"/g, '\"') + '"'
+        filePath = '"' + filePath.replace(/"/g, '\"') + '"';
     }
     return filePath;
 }
 
+export function quoteLine(srcLine: string): string {
+    if (srcLine.match(/\s/)) {
+        srcLine = '"' + srcLine.replace(/"/g, '\"') + '",\n';
+    }
+    return srcLine;
+}
 
 export function replaceVar(originalStr: string, varName: string, value: string): string {
     let regx = new RegExp("\\$\\{" + varName + "([\\W][^ }]+)?\\}", "g");

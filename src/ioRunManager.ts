@@ -153,7 +153,11 @@ export class IORunManager {
             this.output.clear();
         }
         this.output.show(true);
-        // show message
+        this.output.append('[' + executor.codeFile + ' on ' + os.platform() + '] extracting snippets ... \n');
+        //var outstring = this.extractSnippetFromFile(codeFile);
+        this.output.append(this.extractSnippetFromFile(codeFile));
+        // show selected text
+
         // create a file and open it like output. 
     }
 
@@ -169,6 +173,22 @@ export class IORunManager {
             this.output.clear();
         }
         this.output.show(true);
+        let rawdata = fs.readFileSync('/home/lwang/.config/Code/User/snippets/cpp.json');  
+        let cppsp = JSON.parse(rawdata.toString());
+
+        let templatejson = cppsp[0];
+        for (var snipskey in cppsp){
+            this.output.append(cppsp[snipskey].description + '\n');
+        } 
+
+        // create a json file to a default repository
+        // and open it.
+        
+
+        //  for (var item in cppsp.fastio.body) {
+        //     this.output.append(cppsp.fastio.body[item] + '\n');
+        // }
+        
         // show message
         // create a file and open it like output. 
     }
@@ -184,6 +204,20 @@ export class IORunManager {
             this.output.clear();
         }
         this.output.show(true);
+
+        var testsnippet = {};
+        var body = [];
+        body.push('some code');
+        body.push('more code');
+        testsnippet['prefix'] = 'tprefix';
+        testsnippet['body'] = body;
+        testsnippet['description'] = 'a nice application';
+
+        var jdata = {};
+        jdata['tprefix'] = testsnippet;
+        let data = JSON.stringify(jdata, undefined, 2);  
+        fs.writeFileSync('test.json', data);
+
         // show message
         // create a file and open it like output. 
     }
@@ -545,6 +579,38 @@ export class IORunManager {
         });
     }
 
+    private extractSnippetFromFile(iFile: string /* oFileDir: string*/): string {
+        let readLineSync = require('./readLineSync');
+        let iLiner = readLineSync(iFile);
+        let sP = '';
+        let s = '';
+        let bRecordSnippet = false;
+        
+        // a json object 
+        //body : string[] = [];
+        while (true) {
+            let iline = iLiner.next();
+            if (iline.done) {
+                return sP;
+            }
+
+            if (iline.value.startsWith('//startsnippet')){
+                bRecordSnippet = true;
+                
+                continue;
+            }
+            if (iline.value.startsWith('//endsnippet')){
+                bRecordSnippet = false;
+                continue;
+            }
+            
+            if (bRecordSnippet){
+                sP = sP + tools.quoteLine(iline.value);
+            }
+
+        }
+    }
+
     private compareOA(executor: any, oFile: string, aFile: string): boolean {
         let readLineSync = require('./readLineSync')
 
@@ -554,7 +620,7 @@ export class IORunManager {
 
         while (true) {
             let oline = oLiner.next();
-            let aline = aLiner.next();
+            let aline = aLiner.next(); 
             if (oline.done || aline.done) {
                 return oline.done === aline.done;
             }
