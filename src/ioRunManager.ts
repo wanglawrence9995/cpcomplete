@@ -190,7 +190,7 @@ export class IORunManager {
             if (iline.value.startsWith(sEnd)){
                 bRecordSnippet = false;
                 sDesc = iline.value.substring(sEnd.length+1);  //right after prefix
-                sDesc =sDesc + '|' + codeFile.substring(executor.homedir.length);
+                sDesc =sDesc + '|' + codeFile.substring(executor.homedir.length+1);
                 testsnippet['description'] = sDesc;
                 testsnippet['body']=body;
 
@@ -260,6 +260,10 @@ export class IORunManager {
 
 
     }
+
+    // show the current keyword in the first comment. 
+    // Will generate all the link in a .md file
+    // So we can click and go
     public showSnippet(): void {
         let activeEditor = vscode.window.activeTextEditor;
         if (!activeEditor) return;
@@ -272,22 +276,57 @@ export class IORunManager {
             this.output.clear();
         }
         this.output.show(true);
+        //read the first line contain the keyword
+        //for each one with the valid match, extract the link if it has one and dump 
+        // to the choosen md file on the home directory 
+        // and open it.
+        // skip the first two letter as comments, then name of the link file, then search key word 
+        // seperated by space. Should be and operation.
+        let readLineSync = require('./readLineSync');
+        let iLiner = readLineSync(codeFile);
+        let firstline = iLiner.next().value;
+        let wl = firstline.substring(2).trim().split(); //always start from second comment
 
-        var testsnippet = {};
-        var body = [];
-        body.push("some code");
-        body.push("more code");
-        testsnippet['prefix'] = 'tprefix';
-        testsnippet['body'] = body;
-        testsnippet['description'] = 'a nice application';
+        let sp_path_sys = executor.homedir + path.sep + executor.filesystemsnippet;       
+        let link_file = executor.homedir + path.sep + 'links.md';
 
-        var jdata = {};
-        jdata['tprefix'] = testsnippet;
-        let data = JSON.stringify(jdata, undefined, 2);  
-        fs.writeFileSync('test.json', data);
+        let rawdata = fs.readFileSync(sp_path_sys);  
+        let systemsp = JSON.parse(rawdata.toString());
 
-        // show message
-        // create a file and open it like output. 
+        let links=[];
+
+        for (var prop in systemsp)
+        {
+            let curJ = systemsp[prop];
+            let descNlink = curJ['description'];
+            let alist= descNlink.split('|');
+            let strToSearch = alist[0];
+            for(var wordindex in wl){
+              let index =  strToSearch.toLowerCase().indexOf(wl[wordindex].toLowerCase());
+              if (index >= 0){
+                  if (alist.length>1){
+                    links.push('['+ curJ['prefix'] + '](' + alist[1]+')');
+
+                    continue;
+                  }
+              }
+            }
+        }
+
+        if (links.length > 0){
+            var jdata = {};
+            jdata['search'] = firstline.substring(2);
+            jdata['links'] = links;
+            
+            let data = JSON.stringify(jdata, undefined, 2);  
+            fs.writeFileSync(link_file, data);
+            vscode.workspace.openTextDocument(link_file).then(doc => {
+                vscode.window.showTextDocument(doc, vscode.ViewColumn.One);
+            });
+        }
+        else{
+            this.output.append('nothing found for your search string');
+        }
     }
 
     public compileOnly(): void {

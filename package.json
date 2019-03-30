@@ -3,7 +3,7 @@
 	"displayName": "cpcomplete",
 	"publisher": "wanglawrence",
 	"description": "Code compitition helper with a hello",
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
