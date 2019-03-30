@@ -168,8 +168,8 @@
 							"errorTracer": "gdb",
 							"snippetStart": "//startsnippet",
 							"snippetEnd": "//endsnippet",
-							"dirsnippet": "/home/lwang/snippet/cpp/",
-							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/cpp.json"
+							"dirsnippet": "snippet/cpp/",
+							"filesystemsnippet": ".config/Code/User/snippets/cpp.json"
 						},
 						".d": {
 							"compileCmd": "dmd -g ${codeFile}",
@@ -183,8 +183,8 @@
 							"cleanupCmd": "rm ${codeFileNoExt}",
 							"snippetStart": "//startsnippet",
 							"snippetEnd": "//endsnippet",
-							"dirsnippet": "/home/lwang/snippet/go/",
-							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/go.json"
+							"dirsnippet": "snippet/go/",
+							"filesystemsnippet": ".config/Code/User/snippets/go.json"
 
 						},
 						".hs": {
@@ -193,8 +193,8 @@
 							"cleanupCmd": "rm ${codeFileNoExt}",
 							"snippetStart": "--startsnippet",
 							"snippetEnd": "--endsnippet",
-							"dirsnippet": "/home/lwang/snippet/haskell/",
-							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/haskell.json"
+							"dirsnippet": "snippet/haskell/",
+							"filesystemsnippet": ".config/Code/User/snippets/haskell.json"
 
 						},
 						".java": {
@@ -203,15 +203,15 @@
 							"cleanupCmd": "rm ${codeFileNoExt.class}",
 							"snippetStart": "//startsnippet",
 							"snippetEnd": "//endsnippet",
-							"dirsnippet": "/home/lwang/snippet/java/",
-							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/java.json"
+							"dirsnippet": "snippet/java/",
+							"filesystemsnippet": ".config/Code/User/snippets/java.json"
 						},
 						".js": {
 							"runCmd": "node ${codeFile} <${inputFile} >${outputFile}",
 							"snippetStart": "//startsnippet",
 							"snippetEnd": "//endsnippet",
-							"dirsnippet": "/home/lwang/snippet/javascript/",
-							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/javascript.json"
+							"dirsnippet": "snippet/javascript/",
+							"filesystemsnippet": ".config/Code/User/snippets/javascript.json"
 
 						},
 						".kt": {
@@ -240,8 +240,8 @@
 							"runCmd": "python ${codeFile} <${inputFile} >${outputFile}",
 							"snippetStart": "#startsnippet",
 							"snippetEnd": "#endsnippet",
-							"dirsnippet": "/home/lwang/snippet/python/",
-							"filesystemsnippet": "/home/lwang/.config/Code/User/snippets/python.json"
+							"dirsnippet": "snippet/python/",
+							"filesystemsnippet": ".config/Code/User/snippets/python.json"
 						},
 						".php": {
 							"runCmd": "php ${codeFile} <${inputFile} >${outputFile}"
@@ -289,7 +289,8 @@
 						},
 						".cpp": {
 							"cleanupCmd": "rm ${codeFileNoExt} && rm -rf ${codeFileNoExt.dSYM}",
-							"errorTracer": "lldb"
+							"errorTracer": "lldb",
+							"filesystemsnippet": "Library/Application Support/Code/User/snippets/cpp.json"
 						},
 						".pas": {
 							"cleanupCmd": "rm ${codeFileNoExt} ${codeFileNoExt.o} && rm -rf ${codeFileNoExt.dSYM}",
@@ -312,10 +313,12 @@
 							"cleanupCmd": "del ${codeFileNoExt.exe}"
 						},
 						".cpp": {
-							"PATH": "C:\\MinGW\\bin;C:\\msys64\\mingw64\\bin;C:\\Program Files (x86)\\CodeBlocks\\MinGW\\bin;C:\\Program Files\\CodeBlocks\\MinGW\\bin;C:\\cygwin\\bin;C:\\TDM-GCC-32\\bin;C:\\TDM-GCC-64\\bin",
+							"PATH": "C:\\toolkit\\mingw64\\bin;C:\\tools\\mingw64\\bin",
 							"compileCmd": "g++ -g -static -std=gnu++17 -Wfatal-errors ${codeFile} -o ${codeFileNoExt.exe}",
 							"runCmd": "${dirCodeFileNoExt.exe} <${inputFile} >${outputFile}",
-							"cleanupCmd": "del ${codeFileNoExt.exe}"
+							"cleanupCmd": "del ${codeFileNoExt.exe}",
+							"dirsnippet": "snippet\\cpp\\",
+							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\cpp.json"
 						},
 						".go": {
 							"PATH": "C:\\Go\\bin",
@@ -359,6 +362,11 @@
 							"runCmd": "cmd.exe /C ${dirCodeFile} <${inputFile} >${outputFile}"
 						}
 					}
+				},
+				"io-run.homedir":{
+					"type": "string",
+					"default": "/home/lwang",
+					"description": "homedir"
 				},
 				"io-run.timeLimit": {
 					"type": "number",

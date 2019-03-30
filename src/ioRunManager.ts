@@ -155,7 +155,9 @@ export class IORunManager {
         this.output.show(true);
         this.output.append('[' + executor.codeFile + ' on ' + os.platform() + '] extracting snippets ... \n');
         //var outstring = this.extractSnippetFromFile(codeFile);
-
+        let sp_path_sys = executor.homedir + path.sep + executor.filesystemsnippet;
+        let sp_dir_snippet = executor.homedir + path.sep + executor.dirsnippet;
+        
         let sStart =executor.snippetStart; //executor.
         let sEnd = executor.snippetEnd;
         let readLineSync = require('./readLineSync');
@@ -179,7 +181,7 @@ export class IORunManager {
             if (iline.value.startsWith(sStart)){
                 bRecordSnippet = true;
                 sPrefix = iline.value.substring(sStart.length+1);
-                sFileToWrite = executor.dirsnippet + path.sep + sPrefix + ".json";  //need combine with src dir in dir, 
+                sFileToWrite = sp_dir_snippet + path.sep + sPrefix + ".json";  //need combine with src dir in dir, 
                 testsnippet['prefix'] = sPrefix;
             
                 continue;
@@ -188,7 +190,7 @@ export class IORunManager {
             if (iline.value.startsWith(sEnd)){
                 bRecordSnippet = false;
                 sDesc = iline.value.substring(sEnd.length+1);  //right after prefix
-                sDesc =sDesc + '|' + codeFile;
+                sDesc =sDesc + '|' + codeFile.substring(executor.homedir.length);
                 testsnippet['description'] = sDesc;
                 testsnippet['body']=body;
 
@@ -227,17 +229,20 @@ export class IORunManager {
             this.output.clear();
         }
         this.output.show(true);
-
+        
+        // need form the right path 
+        let sp_path_sys = executor.homedir + path.sep + executor.filesystemsnippet;
+        let sp_dir_snippet = executor.homedir + path.sep + executor.dirsnippet;
         
 
-        let rawdata = fs.readFileSync(executor.filesystemsnippet);  
+        let rawdata = fs.readFileSync(sp_path_sys);  
         let systemsp = JSON.parse(rawdata.toString());
 
-        let lf = fs.readdirSync(executor.dirsnippet);
+        let lf = fs.readdirSync(sp_dir_snippet);
 
             // ["c://some-existent-path/file.txt","c:/some-existent-path/subfolder"]
         lf.forEach(file => {
-            file = path.resolve(executor.dirsnippet, file);
+            file = path.resolve(sp_dir_snippet, file);
             let rd = fs.readFileSync(file);
             let curJSON = JSON.parse(rd.toString());
             let targetJSON = {};
@@ -251,7 +256,7 @@ export class IORunManager {
         });
 
         let jdata = JSON.stringify(systemsp, undefined, 2);  
-        fs.writeFileSync(executor.filesystemsnippet, jdata);
+        fs.writeFileSync(sp_path_sys, jdata);
 
 
     }
@@ -841,6 +846,7 @@ export class IORunManager {
         let ext = path.extname(codeFile);
         let executor = executorMap[ext];
         if (executor) {
+            executor.homedir = this.config.get('homedir');
             executor.codeDir = path.dirname(codeFile);
             executor.codeExt = ext;
             executor.codeFile = path.basename(codeFile);
