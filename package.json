@@ -3,7 +3,7 @@
 	"displayName": "cpcomplete",
 	"publisher": "wanglawrence",
 	"description": "Code compitition helper with a hello",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -159,7 +159,11 @@
 							"compileCmd": "gcc -g -std=gnu11 -lm -Wfatal-errors ${codeFile} -o ${codeFileNoExt}",
 							"runCmd": "${dirCodeFileNoExt} <${inputFile} >${outputFile}",
 							"cleanupCmd": "rm ${codeFileNoExt}",
-							"errorTracer": "gdb"
+							"errorTracer": "gdb",
+							"snippetStart": "//startsnippet",
+							"snippetEnd": "//endsnippet",
+							"dirsnippet": "snippet/c/",
+							"filesystemsnippet": ".config/Code/User/snippets/c.json"
 						},
 						".cpp": {
 							"compileCmd": "g++ -g -O2 -std=gnu++17 -Wfatal-errors ${codeFile} -o ${codeFileNoExt}",
@@ -285,12 +289,22 @@
 					"default": {
 						".c": {
 							"cleanupCmd": "rm ${codeFileNoExt} && rm -rf ${codeFileNoExt.dSYM}",
-							"errorTracer": "lldb"
+							"errorTracer": "lldb",
+							"filesystemsnippet": "Library/Application Support/Code/User/snippets/c.json"
 						},
 						".cpp": {
 							"cleanupCmd": "rm ${codeFileNoExt} && rm -rf ${codeFileNoExt.dSYM}",
 							"errorTracer": "lldb",
 							"filesystemsnippet": "Library/Application Support/Code/User/snippets/cpp.json"
+						},
+						".java":{
+							"filesystemsnippet": "Library/Application Support/Code/User/snippets/java.json"
+						},
+						".py":{
+							"filesystemsnippet": "Library/Application Support/Code/User/snippets/python.json"
+						},
+						".go":{
+							"filesystemsnippet": "Library/Application Support/Code/User/snippets/go.json"
 						},
 						".pas": {
 							"cleanupCmd": "rm ${codeFileNoExt} ${codeFileNoExt.o} && rm -rf ${codeFileNoExt.dSYM}",
@@ -310,7 +324,8 @@
 							"PATH": "C:\\MinGW\\bin;C:\\msys64\\mingw64\\bin;C:\\Program Files (x86)\\CodeBlocks\\MinGW\\bin;C:\\Program Files\\CodeBlocks\\MinGW\\bin;C:\\cygwin\\bin;C:\\TDM-GCC-32\\bin;C:\\TDM-GCC-64\\bin",
 							"compileCmd": "gcc -g -static -std=gnu11 -lm -Wfatal-errors ${codeFile} -o ${codeFileNoExt.exe}",
 							"runCmd": "${dirCodeFileNoExt.exe} <${inputFile} >${outputFile}",
-							"cleanupCmd": "del ${codeFileNoExt.exe}"
+							"cleanupCmd": "del ${codeFileNoExt.exe}",
+							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\c.json"
 						},
 						".cpp": {
 							"PATH": "C:\\toolkit\\mingw64\\bin;C:\\tools\\mingw64\\bin",
@@ -324,10 +339,15 @@
 							"PATH": "C:\\Go\\bin",
 							"compileCmd": "go build -o ${codeFileNoExt.exe} ${codeFile}",
 							"runCmd": "${dirCodeFileNoExt.exe} <${inputFile} >${outputFile}",
-							"cleanupCmd": "del ${codeFileNoExt.exe}"
+							"cleanupCmd": "del ${codeFileNoExt.exe}",
+							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\go.json"
 						},
 						".java": {
-							"cleanupCmd": "del ${codeFileNoExt.class}"
+							"cleanupCmd": "del ${codeFileNoExt.class}",
+							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\java.json"
+						},
+						".py":{
+							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\python.json"
 						},
 						".kt": {
 							"cleanupCmd": "del ${codeFileNoExt.jar}"
