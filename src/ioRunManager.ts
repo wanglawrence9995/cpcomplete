@@ -190,7 +190,7 @@ export class IORunManager {
             if (iline.value.startsWith(sEnd)){
                 bRecordSnippet = false;
                 sDesc = iline.value.substring(sEnd.length+1);  //right after prefix
-                sDesc =sDesc + '|' + codeFile.substring(executor.homedir.length+1);
+                sDesc =sDesc + '|' + codeFile.substring(executor.homedir.length+1).replace(/\\/g, "/"); 
                 testsnippet['description'] = sDesc;
                 testsnippet['body']=body;
 
