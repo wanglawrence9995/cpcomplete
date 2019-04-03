@@ -3,7 +3,7 @@
 	"displayName": "cpcomplete",
 	"publisher": "wanglawrence",
 	"description": "Code compitition helper with a hello",
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -150,7 +150,6 @@
 			"type": "object",
 			"title": "IO Run configuration",
 			"properties": {
-				
 				"io-run.executorMap.common": {
 					"type": "object",
 					"description": "Set the common executor of each language.",
@@ -162,7 +161,7 @@
 							"errorTracer": "gdb",
 							"snippetStart": "//startsnippet",
 							"snippetEnd": "//endsnippet",
-							"dirsnippet": "snippet/c/",
+							"dirsnippet": "git/cp/config/snippets/c",
 							"filesystemsnippet": ".config/Code/User/snippets/c.json"
 						},
 						".cpp": {
@@ -172,7 +171,7 @@
 							"errorTracer": "gdb",
 							"snippetStart": "//startsnippet",
 							"snippetEnd": "//endsnippet",
-							"dirsnippet": "snippet/cpp/",
+							"dirsnippet": "git/cp/config/snippets/cpp",
 							"filesystemsnippet": ".config/Code/User/snippets/cpp.json"
 						},
 						".d": {
@@ -187,9 +186,8 @@
 							"cleanupCmd": "rm ${codeFileNoExt}",
 							"snippetStart": "//startsnippet",
 							"snippetEnd": "//endsnippet",
-							"dirsnippet": "snippet/go/",
+							"dirsnippet": "git/cp/config/snippets/go",
 							"filesystemsnippet": ".config/Code/User/snippets/go.json"
-
 						},
 						".hs": {
 							"compileCmd": "ghc -o ${codeFileNoExt} ${codeFile}",
@@ -197,9 +195,8 @@
 							"cleanupCmd": "rm ${codeFileNoExt}",
 							"snippetStart": "--startsnippet",
 							"snippetEnd": "--endsnippet",
-							"dirsnippet": "snippet/haskell/",
+							"dirsnippet": "git/cp/config/snippets/haskell",
 							"filesystemsnippet": ".config/Code/User/snippets/haskell.json"
-
 						},
 						".java": {
 							"compileCmd": "javac -encoding UTF-8 ${codeFile}",
@@ -207,21 +204,24 @@
 							"cleanupCmd": "rm ${codeFileNoExt.class}",
 							"snippetStart": "//startsnippet",
 							"snippetEnd": "//endsnippet",
-							"dirsnippet": "snippet/java/",
+							"dirsnippet": "git/cp/config/snippets/java",
 							"filesystemsnippet": ".config/Code/User/snippets/java.json"
 						},
 						".js": {
 							"runCmd": "node ${codeFile} <${inputFile} >${outputFile}",
 							"snippetStart": "//startsnippet",
 							"snippetEnd": "//endsnippet",
-							"dirsnippet": "snippet/javascript/",
+							"dirsnippet": "git/cp/config/snippets/javascript",
 							"filesystemsnippet": ".config/Code/User/snippets/javascript.json"
-
 						},
 						".kt": {
 							"compileCmd": "kotlinc ${codeFile} -include-runtime -d ${codeFileNoExt.jar}",
 							"runCmd": "java -jar ${codeFileNoExt.jar} <${inputFile} >${outputFile}",
-							"cleanupCmd": "rm ${codeFileNoExt.jar}"
+							"cleanupCmd": "rm ${codeFileNoExt.jar}",
+							"snippetStart": "//startsnippet",
+							"snippetEnd": "//endsnippet",
+							"dirsnippet": "git/cp/config/snippets/kotlin",
+							"filesystemsnippet": ".config/Code/User/snippets/kotlin.json"
 						},
 						".kts": {
 							"runCmd": "kotlinc -script ${codeFile} <${inputFile} >${outputFile}"
@@ -244,7 +244,7 @@
 							"runCmd": "python ${codeFile} <${inputFile} >${outputFile}",
 							"snippetStart": "#startsnippet",
 							"snippetEnd": "#endsnippet",
-							"dirsnippet": "snippet/python/",
+							"dirsnippet": "git/cp/config/snippets/python",
 							"filesystemsnippet": ".config/Code/User/snippets/python.json"
 						},
 						".php": {
@@ -297,13 +297,13 @@
 							"errorTracer": "lldb",
 							"filesystemsnippet": "Library/Application Support/Code/User/snippets/cpp.json"
 						},
-						".java":{
+						".java": {
 							"filesystemsnippet": "Library/Application Support/Code/User/snippets/java.json"
 						},
-						".py":{
+						".py": {
 							"filesystemsnippet": "Library/Application Support/Code/User/snippets/python.json"
 						},
-						".go":{
+						".go": {
 							"filesystemsnippet": "Library/Application Support/Code/User/snippets/go.json"
 						},
 						".pas": {
@@ -321,10 +321,11 @@
 					"description": "Set the executor of each language for Windows.",
 					"default": {
 						".c": {
-							"PATH": "C:\\MinGW\\bin;C:\\msys64\\mingw64\\bin;C:\\Program Files (x86)\\CodeBlocks\\MinGW\\bin;C:\\Program Files\\CodeBlocks\\MinGW\\bin;C:\\cygwin\\bin;C:\\TDM-GCC-32\\bin;C:\\TDM-GCC-64\\bin",
+							"PATH": "C:\\toolkit\\mingw64\\bin;C:\\tools\\mingw64\\bin",
 							"compileCmd": "gcc -g -static -std=gnu11 -lm -Wfatal-errors ${codeFile} -o ${codeFileNoExt.exe}",
 							"runCmd": "${dirCodeFileNoExt.exe} <${inputFile} >${outputFile}",
 							"cleanupCmd": "del ${codeFileNoExt.exe}",
+							"dirsnippet": "git\\cp\\config\\snippets\\c",
 							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\c.json"
 						},
 						".cpp": {
@@ -332,7 +333,7 @@
 							"compileCmd": "g++ -g -static -std=gnu++17 -Wfatal-errors ${codeFile} -o ${codeFileNoExt.exe}",
 							"runCmd": "${dirCodeFileNoExt.exe} <${inputFile} >${outputFile}",
 							"cleanupCmd": "del ${codeFileNoExt.exe}",
-							"dirsnippet": "snippet\\cpp\\",
+							"dirsnippet": "git\\cp\\config\\snippets\\cpp",
 							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\cpp.json"
 						},
 						".go": {
@@ -340,17 +341,22 @@
 							"compileCmd": "go build -o ${codeFileNoExt.exe} ${codeFile}",
 							"runCmd": "${dirCodeFileNoExt.exe} <${inputFile} >${outputFile}",
 							"cleanupCmd": "del ${codeFileNoExt.exe}",
+							"dirsnippet": "git\\cp\\config\\snippets\\go",
 							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\go.json"
 						},
 						".java": {
 							"cleanupCmd": "del ${codeFileNoExt.class}",
+							"dirsnippet": "git\\cp\\config\\snippets\\java",
 							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\java.json"
 						},
-						".py":{
+						".py": {
+							"dirsnippet": "git\\cp\\config\\snippets\\python",
 							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\python.json"
 						},
 						".kt": {
-							"cleanupCmd": "del ${codeFileNoExt.jar}"
+							"cleanupCmd": "del ${codeFileNoExt.jar}",
+							"dirsnippet": "git\\cp\\config\\snippets\\kotlin",
+							"filesystemsnippet": "AppData\\Roaming\\Code\\User\\snippets\\kotlin.json"
 						},
 						".ml": {
 							"compileCmd": "ocamlc ${codeFile} -o ${codeFileNoExt.exe}",
@@ -383,7 +389,7 @@
 						}
 					}
 				},
-				"io-run.homedir":{
+				"io-run.homedir": {
 					"type": "string",
 					"default": "/home/lwang",
 					"description": "homedir"
@@ -397,7 +403,7 @@
 					"type": "number",
 					"default": 8080,
 					"description": "Can change this to any port so vscode used by diffferent user can have different listening port."
-				},				
+				},
 				"io-run.inputExtension": {
 					"type": "string",
 					"default": ".inp",

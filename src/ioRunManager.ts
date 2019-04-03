@@ -234,6 +234,10 @@ export class IORunManager {
         let sp_path_sys = executor.homedir + path.sep + executor.filesystemsnippet;
         let sp_dir_snippet = executor.homedir + path.sep + executor.dirsnippet;
         
+        let sp_sys_filename =  sp_path_sys.substring(sp_path_sys.lastIndexOf(path.sep)+1);
+       // let lang_cat = sp_sys_filename.split('.')[0];
+
+        let sp_path_local = sp_dir_snippet.substring(0, sp_dir_snippet.lastIndexOf(path.sep)+1) + sp_sys_filename ;
 
         let rawdata = fs.readFileSync(sp_path_sys);  
         let systemsp = JSON.parse(rawdata.toString());
@@ -257,7 +261,7 @@ export class IORunManager {
 
         let jdata = JSON.stringify(systemsp, undefined, 2);  
         fs.writeFileSync(sp_path_sys, jdata);
-
+        fs.writeFileSync(sp_path_local, jdata);
 
     }
 
