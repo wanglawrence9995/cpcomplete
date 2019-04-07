@@ -157,7 +157,22 @@ export class IORunManager {
         //var outstring = this.extractSnippetFromFile(codeFile);
         let sp_path_sys = executor.homedir + path.sep + executor.filesystemsnippet;
         let sp_dir_snippet = executor.homedir + path.sep + executor.dirsnippet;
-        
+        if (!fs.existsSync(sp_dir_snippet)){
+            fs.mkdirSync(sp_dir_snippet);
+        }
+
+        let sp_sys_filename =  sp_path_sys.substring(sp_path_sys.lastIndexOf(path.sep)+1);
+
+        let sp_path_local = sp_dir_snippet.substring(0, sp_dir_snippet.lastIndexOf(path.sep)+1) + sp_sys_filename ;
+
+        if (!fs.existsSync(sp_path_sys)){
+            if (!fs.existsSync(sp_path_sys.substring(0,sp_path_sys.lastIndexOf(path.sep)+1))){
+                 fs.mkdirSync(sp_path_sys.substring(0,sp_path_sys.lastIndexOf(path.sep)+1));
+            }
+            //copy sample file over.
+            fs.copyFileSync(sp_path_local, sp_path_sys);
+          }
+
         let sStart =executor.snippetStart; //executor.
         let sEnd = executor.snippetEnd;
         let readLineSync = require('./readLineSync');
@@ -180,7 +195,7 @@ export class IORunManager {
 
             if (iline.value.startsWith(sStart)){
                 bRecordSnippet = true;
-                sPrefix = iline.value.substring(sStart.length+1);
+                sPrefix = iline.value.substring(sStart.length+1).trim();
                 sFileToWrite = sp_dir_snippet + path.sep + sPrefix + ".json";  //need combine with src dir in dir, 
                 testsnippet['prefix'] = sPrefix;
             
@@ -189,7 +204,7 @@ export class IORunManager {
 
             if (iline.value.startsWith(sEnd)){
                 bRecordSnippet = false;
-                sDesc = iline.value.substring(sEnd.length+1);  //right after prefix
+                sDesc = iline.value.substring(sEnd.length+1).trim();  //right after prefix
                 sDesc =sDesc + '|' + codeFile.substring(executor.homedir.length+1).replace(/\\/g, "/"); 
                 testsnippet['description'] = sDesc;
                 testsnippet['body']=body;
@@ -265,6 +280,40 @@ export class IORunManager {
 
     }
 
+    //allow us to show the basic system configuration.
+    public showSnippetSys(): void {
+        let activeEditor = vscode.window.activeTextEditor;
+        if (!activeEditor) return;
+
+        let codeFile = this.getCodeFile();
+        if (codeFile == null) return;
+
+        let executor = this.getExecutor(codeFile);
+        if (executor.clearPreviousOutput) {
+            this.output.clear();
+        }
+        this.output.show(true);
+        this.output.append('[' + executor.codeFile + ' on ' + os.platform() + '] showing snippets ... \n');
+
+        let sp_path_sys = executor.homedir + path.sep + executor.filesystemsnippet;
+        let sp_dir_snippet = executor.homedir + path.sep + executor.dirsnippet;
+        
+        let sp_sys_filename =  sp_path_sys.substring(sp_path_sys.lastIndexOf(path.sep)+1);
+
+        let sp_path_local = sp_dir_snippet.substring(0, sp_dir_snippet.lastIndexOf(path.sep)+1) + sp_sys_filename ;
+
+        if (!fs.existsSync(sp_path_sys)){
+            if (!fs.existsSync(sp_path_sys.substring(0,sp_path_sys.lastIndexOf(path.sep)+1))){
+                 fs.mkdirSync(sp_path_sys.substring(0,sp_path_sys.lastIndexOf(path.sep)+1));
+            }
+            //copy sample file over.
+            fs.copyFileSync(sp_path_local, sp_path_sys);
+          }
+    
+        vscode.workspace.openTextDocument(sp_path_sys).then(doc => {
+            vscode.window.showTextDocument(doc, vscode.ViewColumn.Two);
+        });
+    }
     // show the current keyword in the first comment. 
     // Will generate all the link in a .md file
     // So we can click and go

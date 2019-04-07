@@ -3,7 +3,7 @@
 	"displayName": "cpcomplete",
 	"publisher": "wanglawrence",
 	"description": "Code compitition helper with a hello",
-	"version": "1.5.0",
+	"version": "1.6.0",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -15,6 +15,7 @@
 		"onCommand:io-run.extractsnippet",
 		"onCommand:io-run.mergesnippet",
 		"onCommand:io-run.showsnippet",
+		"onCommand:io-run.showsnippetsys",
 		"onCommand:io-run.compileonly",
 		"onCommand:io-run.run",
 		"onCommand:io-run.run-1-input",
@@ -38,6 +39,10 @@
 			{
 				"command": "io-run.showsnippet",
 				"title": "IORun Search Snippet"
+			},
+			{
+				"command": "io-run.showsnippetsys",
+				"title": "IORun Show System Snippet"
 			},
 			{
 				"command": "io-run.compileonly",
@@ -73,6 +78,10 @@
 			{
 				"command": "io-run.showsnippet",
 				"key": "ctrl+alt+k 3"
+			},
+			{
+				"command": "io-run.showsnippetsys",
+				"key": "ctrl+alt+k 4"
 			},
 			{
 				"command": "io-run.compileonly",

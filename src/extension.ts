@@ -36,6 +36,9 @@ export function activate(context: vscode.ExtensionContext) {
     let showsnippet = vscode.commands.registerCommand('io-run.showsnippet', () => {
         ioRunManager.showSnippet();
     });
+    let showsnippetsys = vscode.commands.registerCommand('io-run.showsnippetsys', () => {
+        ioRunManager.showSnippetSys();
+    });
     let compileonly = vscode.commands.registerCommand('io-run.compileonly', () => {
         ioRunManager.compileOnly();
     });
@@ -56,6 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(extractsnippet);
     context.subscriptions.push(mergesnippet);
     context.subscriptions.push(showsnippet);
+    context.subscriptions.push(showsnippetsys);
     context.subscriptions.push(compileonly);
     context.subscriptions.push(run);
     context.subscriptions.push(run1input);
