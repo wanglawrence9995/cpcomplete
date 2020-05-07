@@ -100,7 +100,7 @@ export class IORunManager {
     public stop(): void {
       //  analytics.send("Action", "stop");
 
-        if (this.process !== null) {
+        if (this.process != null) {
             this.killRequested = true;
             let kill = require('tree-kill');
             kill(this.process.pid);
@@ -385,7 +385,7 @@ export class IORunManager {
     public compileOnly(): void {
         //  analytics.send("Action", "run");
   
-          if (this.process !== null) {
+          if (this.process != null) {
               vscode.window.showInformationMessage('[' + this.runningCodeFile + '] still running!');
               return;
           }
@@ -417,7 +417,7 @@ export class IORunManager {
     public run(runAllInputs: boolean = true): void {
       //  analytics.send("Action", "run");
 
-        if (this.process !== null) {
+        if (this.process != null) {
             vscode.window.showInformationMessage('[' + this.runningCodeFile + '] still running!');
             return;
         }
@@ -467,7 +467,7 @@ export class IORunManager {
             let errLocationRegExp = errLocationRegExps[iReg];
             let r = new RegExp(errLocationRegExp);
             let arr = r.exec(errMsg);
-            if (arr !== null && arr.length > 1) {
+            if (arr != null && arr.length > 1) {
                 let line = Number(arr[1]);
                 let character = 1;
                 if (arr.length > 3) {
@@ -599,14 +599,14 @@ export class IORunManager {
 
             processEnv.PATH = executor.codeDir + path.delimiter + processEnv.PATH;
             let startTime = new Date();
-            if (this.executeTimer !== null) {
+            if (this.executeTimer != null) {
                 clearTimeout(this.executeTimer);
                 this.executeTimer = null;
             }
 
             if (executor.timeLimit > 0) {
                 this.executeTimer = setTimeout(() => {
-                    if (this.process !== null) {
+                    if (this.process != null) {
                         this.timeLimitExceeded = true;
                         let kill = require('tree-kill');
                         kill(this.process.pid);
@@ -760,7 +760,7 @@ export class IORunManager {
                 oline.value = (oline.value || '').trim();
                 aline.value = (aline.value || '').trim();
             }
-            if (oline.value !== aline.value) {
+            if (oline.value != aline.value) {
                 return false;
             }
         }
@@ -882,7 +882,7 @@ export class IORunManager {
 
     private clearTerminal() {
         this.terminal.hide();
-        if (this.terminal !== null) {
+        if (this.terminal != null) {
             try {
                 this.terminal.dispose();
             } catch (error) {
@@ -971,7 +971,7 @@ export class IORunManager {
         let commonMapObject = tools.unwrap(commonMap);
         let osMapObject = tools.unwrap(osMap);
 
-        if (osMapObject !== null) {
+        if (osMapObject != null) {
             Object.keys(osMapObject).forEach(function (key) {
                 if (!commonMapObject[key]) {
                     commonMapObject[key] = osMapObject[key];
@@ -992,7 +992,7 @@ export class IORunManager {
         let extension = path.extname(activeFile).toLowerCase();
         let executor = executorMap[extension];
 
-        if (executor !== null) {
+        if (executor != null) {
             return activeFile;
         }
 
@@ -1000,7 +1000,7 @@ export class IORunManager {
         let outputExtension = this.config.outputExtension.toLowerCase();
         let acceptExtension = this.config.acceptExtension.toLowerCase();
 
-        if (extension !== inputExtension && extension !== outputExtension && extension !== acceptExtension) {
+        if (extension != inputExtension && extension != outputExtension && extension != acceptExtension) {
             return null;
         }
 
