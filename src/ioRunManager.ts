@@ -530,7 +530,7 @@ export class IORunManager {
 
     private compileCode(executor: any) {
 
-        if (executor.compileCmd === null || executor.compileCmd.length === 0) {
+        if (executor.compileCmd === null || executor.compileCode=== undefined || executor.compileCmd.length === 0) {
             this.output.appendLine('[' + executor.codeFile + '] will be run');
             this.runCode(executor);
             return;

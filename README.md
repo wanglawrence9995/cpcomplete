@@ -1,3 +1,4 @@
+1.8.0: Deal with possible empty compilecmd property, need get more on the 
 1.7.0: Stop the possible RTE debugging invoking action.
 1.6.0: Create system snippet file and directory if it is not there. add ctrl+alt+k 4  as the key for show the system config file. also as create such file if it's not there.
 Also update cp directory for a package.json copy 
