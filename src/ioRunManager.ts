@@ -51,7 +51,7 @@ export class IORunManager {
 
             // Now process the data and write it into a file and open it
             let codeFile = this.getCodeFile();
-            if (codeFile == null) return;
+            if (codeFile === null) return;
             let inputExt = this.config.inputExtension.toLowerCase();
             let acceptExt = this.config.acceptExtension.toLowerCase();
             let codeFileNoExt = tools.getFileNoExtension(codeFile);     
@@ -113,11 +113,11 @@ export class IORunManager {
         let codeFile = this.getCodeFile();
         if (codeFile === null) {return;}
 
-        let codeFileNoExt = tools.getFileNoExtension(codeFile)
+        let codeFileNoExt = tools.getFileNoExtension(codeFile);
         let inputExt = this.config.inputExtension.toLowerCase();
         let acceptExt = this.config.acceptExtension.toLowerCase();
 
-        let pad = x => { return (x < 10) ? ('0' + x) : x };
+        let pad = x => { return (x < 10) ? ('0' + x) : x; };
 
         for (var i = 1; i <= 999; i++) {
             let inputFileName = codeFileNoExt + '.' + pad(i) + inputExt;
@@ -385,7 +385,7 @@ export class IORunManager {
     public compileOnly(): void {
         //  analytics.send("Action", "run");
   
-          if (this.process != null) {
+          if (this.process !== null) {
               vscode.window.showInformationMessage('[' + this.runningCodeFile + '] still running!');
               return;
           }
@@ -417,7 +417,7 @@ export class IORunManager {
     public run(runAllInputs: boolean = true): void {
       //  analytics.send("Action", "run");
 
-        if (this.process != null) {
+        if (this.process !== null) {
             vscode.window.showInformationMessage('[' + this.runningCodeFile + '] still running!');
             return;
         }
@@ -467,7 +467,7 @@ export class IORunManager {
             let errLocationRegExp = errLocationRegExps[iReg];
             let r = new RegExp(errLocationRegExp);
             let arr = r.exec(errMsg);
-            if (arr != null && arr.length > 1) {
+            if (arr !== null && arr.length > 1) {
                 let line = Number(arr[1]);
                 let character = 1;
                 if (arr.length > 3) {
@@ -515,7 +515,7 @@ export class IORunManager {
         });
         this.process.on('close', (code) => {
             this.process = null;
-            if (code == 0) {
+            if (code === 0) {
                 this.output.appendLine('ok');
                //  this.runCode(executor);   // the only difference
             } else {
@@ -530,7 +530,7 @@ export class IORunManager {
 
     private compileCode(executor: any) {
 
-        if (executor.compileCmd == null || executor.compileCmd.length == 0) {
+        if (executor.compileCmd === null || executor.compileCmd.length === 0) {
             this.output.appendLine('[' + executor.codeFile + '] will be run');
             this.runCode(executor);
             return;
@@ -556,7 +556,7 @@ export class IORunManager {
         });
         this.process.on('close', (code) => {
             this.process = null;
-            if (code == 0) {
+            if (code === 0) {
                 this.output.appendLine('ok');
                 this.runCode(executor);
             } else {
@@ -571,7 +571,7 @@ export class IORunManager {
 
     private runCode(executor: any) {
         let inputFiles = this.getInputFiles(executor);
-        if (inputFiles.length == 0) {
+        if (inputFiles.length === 0) {
             if (executor.runAllInput) {
                 this.runInTerminal(executor);
             }
@@ -599,14 +599,14 @@ export class IORunManager {
 
             processEnv.PATH = executor.codeDir + path.delimiter + processEnv.PATH;
             let startTime = new Date();
-            if (this.executeTimer != null) {
+            if (this.executeTimer !== null) {
                 clearTimeout(this.executeTimer);
                 this.executeTimer = null;
             }
 
             if (executor.timeLimit > 0) {
                 this.executeTimer = setTimeout(() => {
-                    if (this.process != null) {
+                    if (this.process !== null) {
                         this.timeLimitExceeded = true;
                         let kill = require('tree-kill');
                         kill(this.process.pid);
@@ -629,13 +629,13 @@ export class IORunManager {
                     let elapsedTime = (endTime.getTime() - startTime.getTime()) / 1000;
 
                     this.process = null;
-                    if (err == null) {
+                    if (err === null) {
                         this.output.append('done ' + elapsedTime.toFixed(3) + 's');
 
                         let oFile = path.join(executor.codeDir, outputFile);
                         let aFile = path.join(executor.codeDir, acceptFile);
                         if (fs.existsSync(oFile)) {
-                            if (fs.statSync(oFile).size == 0) {
+                            if (fs.statSync(oFile).size === 0) {
                                 this.output.appendLine(' ' + executor.outputExtension + ' empty');
                                 if (executor.deleteOutputFiles) {
                                     fs.unlinkSync(oFile);
@@ -678,7 +678,7 @@ export class IORunManager {
                                             this.cleanup(executor);
                                         });
 
-                                    }
+                                    };
 
                                     if (vscode.window.activeTextEditor.document.fileName == oFile) {
                                         vscode.commands.executeCommand('workbench.action.closeActiveEditor').then(() => {
@@ -704,11 +704,12 @@ export class IORunManager {
                     }
                     else {
                         this.output.appendLine('RTE');
-                        if (!this.traceError(executor, runCmd, processEnv)) {
-                            this.output.appendLine(stderr);
-                            this.jumpToErrorPosition(executor, stderr);
-                            this.cleanup(executor);
-                        }
+                        // if (!this.traceError(executor, runCmd, processEnv)) {
+                        //     this.output.appendLine(stderr);
+                        //     this.jumpToErrorPosition(executor, stderr);
+                        //     this.cleanup(executor);
+                        // }
+                        this.cleanup(executor);
                         return;
                     }
                 }
@@ -720,7 +721,7 @@ export class IORunManager {
                 }
 
                 inputFiles.shift();
-                if (inputFiles.length == 0) {
+                if (inputFiles.length === 0) {
                     this.cleanup(executor);
                     return;
                 }
@@ -743,7 +744,7 @@ export class IORunManager {
 
 
     private compareOA(executor: any, oFile: string, aFile: string): boolean {
-        let readLineSync = require('./readLineSync')
+        let readLineSync = require('./readLineSync');
 
         let oLiner = readLineSync(oFile);
         let aLiner = readLineSync(aFile);
@@ -790,14 +791,14 @@ export class IORunManager {
             let activeFileNoExt = tools.getFileNoExtension(vscode.window.activeTextEditor.document.fileName);
 
             vscode.workspace.textDocuments.forEach(doc => {
-                if (!doc.isDirty) return;
+                if (!doc.isDirty){ return;}
 
-                if (doc.fileName == executor.codeDirFile) {
+                if (doc.fileName === executor.codeDirFile) {
                     saveList.push(doc);
                 } else if (doc.fileName.startsWith(executor.codeDirFileNoExt + ".")) {
                     if (executor.runAllInput || doc.fileName.startsWith(activeFileNoExt + ".")) {
                         let ext = path.extname(doc.fileName).toLowerCase();
-                        if (ext == executor.inputExtension || ext == executor.acceptExtension || ext == executor.outputExtension) {
+                        if (ext === executor.inputExtension || ext === executor.acceptExtension || ext === executor.outputExtension) {
                             let mid = doc.fileName.substr(activeFileNoExt.length + 1, doc.fileName.length - activeFileNoExt.length - ext.length - 1);
                             if (mid.indexOf(".") < 0) {
                                 saveList.push(doc);
@@ -817,7 +818,7 @@ export class IORunManager {
             doc.save().then(() => {
                 this.output.appendLine('ok');
                 saveList.shift();
-                if (saveList.length == 0) {
+                if (saveList.length === 0) {
                     this.compileCodeOnly(executor);
                 } else {
                     saveTopDoc();
@@ -837,7 +838,7 @@ export class IORunManager {
             doc.save().then(() => {
                 this.output.appendLine('ok');
                 saveList.shift();
-                if (saveList.length == 0) {
+                if (saveList.length === 0) {
                     this.compileCode(executor);
                 } else {
                     saveTopDoc();
@@ -873,7 +874,7 @@ export class IORunManager {
         inputFiles.sort((a, b) => {
             let midA = a.substr(lenName, a.length - lenName - lenExt);
             let midB = b.substr(lenName, b.length - lenName - lenExt);
-            return midA < midB ? -1 : a == b ? 0 : 1;
+            return midA < midB ? -1 : a === b ? 0 : 1;
         });
 
         return inputFiles;
@@ -881,7 +882,7 @@ export class IORunManager {
 
     private clearTerminal() {
         this.terminal.hide();
-        if (this.terminal != null) {
+        if (this.terminal !== null) {
             try {
                 this.terminal.dispose();
             } catch (error) {
@@ -890,7 +891,7 @@ export class IORunManager {
         }
 
         this.terminal = vscode.window.createTerminal('IO Run');
-        if (os.platform() == 'win32') {
+        if (os.platform() === 'win32') {
             this.terminal.sendText("cls");
         } else {
             this.terminal.sendText("clear");
@@ -915,7 +916,7 @@ export class IORunManager {
             let cleanupCmd = this.setCmdVar(executor, executor.cleanupCmd);
 
             let delimiter = ' && ';
-            if (os.platform() == 'win32') {
+            if (os.platform() === 'win32') {
                 delimiter = ' & ';
                 if (vscode.workspace.getConfiguration("terminal.integrated.shell").get("windows", "").toLocaleLowerCase().endsWith("powershell.exe")) {
                     delimiter = ' "&" ';
@@ -970,7 +971,7 @@ export class IORunManager {
         let commonMapObject = tools.unwrap(commonMap);
         let osMapObject = tools.unwrap(osMap);
 
-        if (osMapObject != null) {
+        if (osMapObject !== null) {
             Object.keys(osMapObject).forEach(function (key) {
                 if (!commonMapObject[key]) {
                     commonMapObject[key] = osMapObject[key];
@@ -991,7 +992,7 @@ export class IORunManager {
         let extension = path.extname(activeFile).toLowerCase();
         let executor = executorMap[extension];
 
-        if (executor != null) {
+        if (executor !== null) {
             return activeFile;
         }
 
@@ -999,7 +1000,7 @@ export class IORunManager {
         let outputExtension = this.config.outputExtension.toLowerCase();
         let acceptExtension = this.config.acceptExtension.toLowerCase();
 
-        if (extension != inputExtension && extension != outputExtension && extension != acceptExtension) {
+        if (extension !== inputExtension && extension !== outputExtension && extension !== acceptExtension) {
             return null;
         }
 
@@ -1015,7 +1016,7 @@ export class IORunManager {
             }
         }
 
-        if (activeFileNoExt == '') return null;
+        if (activeFileNoExt === '') {return null;}
         for (var ext in executorMap) {
             let fileName = activeFileNoExt + ext;
             if (fs.existsSync(fileName)) {
