@@ -556,6 +556,24 @@ export class IORunManager {
         // let cmdToRun = 'node ../../../submitvjudge.js at abc111 A';
         let cmdToRun = 'node submit '+ cmdline.join(' ');
         this.process = require('child_process').exec(cmdToRun, { cwd: curpath, env: processEnv });
+        let stdout = '';
+        let stderr = '';
+        this.process.stdout.on('data', (data) => {
+            stdout += data;
+        });
+        this.process.stderr.on('data', (data) => {
+            stderr += data;
+        });
+        this.process.on('close', (code) => {
+            this.process = null;
+            if (code === 0) {
+                this.output.appendLine('ok for next action!');
+            } else {
+                this.output.appendLine('error!');
+                if (stdout.length > 0) this.output.appendLine(stdout);
+                if (stderr.length > 0) this.output.appendLine(stderr);
+            }
+        });
         return;
     }
 
