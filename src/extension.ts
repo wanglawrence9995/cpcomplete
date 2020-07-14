@@ -56,6 +56,9 @@ export function activate(context: vscode.ExtensionContext) {
     let addInputOutput = vscode.commands.registerCommand('io-run.add-input-output', () => {
         ioRunManager.addInputOutput();
     });
+    let submit = vscode.commands.registerCommand('io-run.submit', () => {
+        ioRunManager.submitCurrentCode();
+    });
     context.subscriptions.push(extractsnippet);
     context.subscriptions.push(mergesnippet);
     context.subscriptions.push(showsnippet);
@@ -65,6 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(run1input);
     context.subscriptions.push(stop);
     context.subscriptions.push(addInputOutput);
+    context.subscriptions.push(submit);
 	context.subscriptions.push(disposable);
 }
 

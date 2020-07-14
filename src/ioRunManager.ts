@@ -527,6 +527,37 @@ export class IORunManager {
             }
         });       
     }
+    
+    // submit current open code to judge, we use the feature of submit.js existence to facilitate our action.
+    public submitCurrentCode(){
+        let activeEditor = vscode.window.activeTextEditor;
+        if (!activeEditor) return;
+
+        let codeFile = this.getCodeFile();
+        if (codeFile == null) return;
+
+        let executor = this.getExecutor(codeFile);
+        
+        // use directory name to make sure we have the right format
+        var cmdline=[];
+        // cmdline.push(executor.codeFileNoExt); //the probid we need
+        var curpath = executor.codeDir;
+        while (!fs.existsSync(path.join(curpath, 'submit.js'))){
+            cmdline.push(path.basename(curpath));
+            curpath=path.dirname(curpath);
+        }
+        cmdline.reverse();
+        
+        // executor.runAllInput = runAllInputs;
+        // check parent directory name.
+        this.output.appendLine('[' + executor.codeFile + '] will be submitted to judges');
+        let processEnv = Object.assign({}, process.env);
+        processEnv.DISPLAY=':0';
+        // let cmdToRun = 'node ../../../submitvjudge.js at abc111 A';
+        let cmdToRun = 'node submit '+ cmdline.join(' ');
+        this.process = require('child_process').exec(cmdToRun, { cwd: curpath, env: processEnv });
+        return;
+    }
 
     private compileCode(executor: any) {
 
@@ -963,6 +994,7 @@ export class IORunManager {
 
         return executor;
     }
+
 
     private getExecutorMap(): any {
         let commonMap = this.config.get('executorMap.common');

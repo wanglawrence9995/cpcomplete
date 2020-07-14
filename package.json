@@ -3,7 +3,7 @@
 	"displayName": "cpcomplete",
 	"publisher": "wanglawrence",
 	"description": "Code compitition helper with a hello",
-	"version": "1.8.0",
+	"version": "1.9.0",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
@@ -19,7 +19,8 @@
 		"onCommand:io-run.compileonly",
 		"onCommand:io-run.run",
 		"onCommand:io-run.run-1-input",
-		"onCommand:io-run.add-input-output"
+		"onCommand:io-run.add-input-output",
+		"onCommand:io-run.submit"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -64,6 +65,10 @@
 			{
 				"command": "io-run.add-input-output",
 				"title": "IORun Add IO"
+			},
+			{
+				"command": "io-run.submit",
+				"title": "IORun submit to judge"
 			}
 		],
 		"keybindings": [
@@ -100,6 +105,10 @@
 				"key": "alt+ctrl+a"
 			},
 			{
+				"command": "io-run.submit",
+				"key": "alt+ctrl+k s"
+			},
+			{
 				"command": "io-run.stop",
 				"key": "shift+enter"
 			}
@@ -109,6 +118,11 @@
 				{
 					"when": "!inOutput",
 					"command": "io-run.add-input-output",
+					"group": "navigation"
+				},
+				{
+					"when": "!inOutput",
+					"command": "io-run.submit",
 					"group": "navigation"
 				},
 				{
@@ -292,7 +306,7 @@
 						},
 						".dart": {
 							"runCmd": "dart ${codeFile}  <${inputFile} >${outputFile}"
-						  },
+						},
 						".cs": {
 							"compileCmd": "mcs ${codeFile} -out:a.out ",
 							"runCmd": "mono a.out <${inputFile} >${outputFile}",
@@ -423,17 +437,17 @@
 				},
 				"io-run.inputExtension": {
 					"type": "string",
-					"default": ".inp",
+					"default": ".in",
 					"description": "Define extension for input files."
 				},
 				"io-run.outputExtension": {
 					"type": "string",
-					"default": ".out",
+					"default": ".output",
 					"description": "Define extension for output files."
 				},
 				"io-run.acceptExtension": {
 					"type": "string",
-					"default": ".oac",
+					"default": ".out",
 					"description": "Define extension for accepting output files."
 				},
 				"io-run.clearPreviousOutput": {
